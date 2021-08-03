@@ -1,0 +1,25 @@
+name: simple-instagram
+recipe: drupal9
+config:
+  webroot: .
+  xdebug: true
+  php: '8.0'
+  conf:
+    php: .vscode/php.ini
+services:
+  database:
+    type: mysql
+    portforward: 33068
+  appserver:
+    overrides:
+      environment:
+        MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","chromeOptions":{"args":["--disable-gpu","--headless", "--no-sandbox", "--disable-dev-shm-usage"]}}, "http://chrome:9515"]'
+  chrome:
+    type: compose
+    services:
+      image: drupalci/webdriver-chromedriver:production
+      command: chromedriver --log-path=/tmp/chromedriver.log --verbose --whitelisted-ips=
+tooling:
+  test:
+    service: appserver
+    cmd: "php -d xdebug.remote_port=9003 /app/vendor/bin/phpunit -c /app/phpunit.xml"
