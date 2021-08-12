@@ -11,6 +11,9 @@ services:
     type: mysql
     portforward: 33068
   appserver:
+    xdebug: coverage, debug
+    config:
+      php: .vscode/php.ini
     overrides:
       environment:
         MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","chromeOptions":{"args":["--disable-gpu","--headless", "--no-sandbox", "--disable-dev-shm-usage"]}}, "http://chrome:9515"]'
